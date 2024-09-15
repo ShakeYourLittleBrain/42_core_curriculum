@@ -1,0 +1,86 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Bureaucrat.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skhastag <skhastag@student.42heilbornn.de> +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/12 20:20:02 by skhastag          #+#    #+#             */
+/*   Updated: 2024/08/13 05:19:19 by skhastag         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+#include "Bureaucrat.hpp"
+
+Bureaucrat::Bureaucrat(const std::string &name, int grade) : _name(name)
+{
+	if (grade < 1)
+		throw GradeTooHighException();
+	if (grade > 150)
+		throw GradeTooLowException();
+	this->_grade = grade;
+}
+
+Bureaucrat::~Bureaucrat(){}
+
+Bureaucrat::Bureaucrat(const Bureaucrat &copy) : _name(copy._name), _grade(copy._grade){}
+
+Bureaucrat &Bureaucrat::operator=(const Bureaucrat &copy)
+{
+	if (this == &copy)
+		return *this;
+	_grade = copy._grade;
+	return *this;
+}
+
+const std::string &Bureaucrat::getName() const
+{
+	return _name;
+}
+
+int Bureaucrat::getGrade() const
+{
+	return _grade;
+}
+
+void Bureaucrat::incrementGrade()
+{
+	if (_grade == 1)
+		throw GradeTooHighException();
+	_grade--;
+}
+
+void Bureaucrat::decrementGrade()
+{
+	if (_grade == 150)
+		throw GradeTooLowException();
+	_grade++;
+}
+
+/*
+	This is a operator overloading to print the object in the format:
+	and it is the beauty of C++. We can overload the operator to print the object in the format we want.
+*/
+
+std::ostream &operator<<(std::ostream &out, const Bureaucrat &bureaucrat)
+{
+	out << "Name: " << bureaucrat.getName() << ", Grade: " << bureaucrat.getGrade();
+	return out;
+}
+
+/*
+	These function for implement the exception classes
+	and the char * of the what() function is returned
+	and you can get it by calling the x.what() where x is the exception object
+*/
+
+const char *Bureaucrat::GradeTooHighException::what() const throw()
+{
+	return "Grade is too high";
+}
+
+const char *Bureaucrat::GradeTooLowException::what() const throw()
+{
+	return "Grade is too low";
+}
